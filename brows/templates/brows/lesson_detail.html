@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'brows/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+<aside class="panel">
+    <a href="{% url 'logout' %}" class="btn btn-danger">Выйти</a>
+    <a href="#"><p>LOGO</p></a>
+
+    {% for i in lessons_nav %}
+        {% if i.get_pre %}
+            <div class="lesson_link">
+                <a href="{{ i.get_absolute_url }}" class="btn btn-primary">{{ i.lesson }}</a>
+            </div>
+        {% elif i == first %}
+            <div class="lesson_link">
+                <a href="{{ i.get_absolute_url }}" class="btn btn-primary">{{ i.lesson }}</a>
+                <p>{{ lesson_previous.is_correct }}</p>
+            </div>
+        {% endif %}
+
+    {% endfor %}
+</aside>
+<div class="lessons_detail">
+
+    <h1>{{ lessons.lesson }}</h1>
+    <iframe width="560" height="315" src="{{ lessons.Video }}" title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    <h2>Краткий конспект к уроку</h2><br>
+    <p>{{ lessons.abstract }}</p>
+    <h2>Ваше домашнее задание</h2><br>
+    <p>{{ lessons.home_work }}</p>
+    {% if u_answer %}
+        <h3>Ваше д/з отправлено на проверку преподавателю</h3>
+    {% else %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+                <label>Добавить ДЗ</label>
+                <input required name="photos" type="file" multiple class="file-upload">
+
+            <button type="submit" class="btn btn-primary m-3">Отправить</button>
+        </form>
+    {% endif %}
+    <br>
+{#<h1>Комментарии преподавателя</h1>#}
+{#    {% if comment %}#}
+{#        <div class="card">#}
+{#          <div class="card-body">#}
+{#            {{ comment }}#}
+{#          </div>#}
+{#        </div>#}
+{#    {% else %}#}
+{#        <div class="card">#}
+{#          <div class="card-body">#}
+{#            Комментарии к домашнему заданию отсутсвуют#}
+{#          </div>#}
+{#        </div>#}
+{#    {% endif %}#}
+
+</div>
+</body>
+</html>
